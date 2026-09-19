@@ -6,7 +6,7 @@ import {
 } from 'react-icons/si';
 
 const API_BASE = 'http://localhost:8080/api';
-const LINKEDIN_URL = 'https://www.linkedin.com/in/lokeshsun'; // <-- replace with your actual URL
+const LINKEDIN_URL = 'https://www.linkedin.com/in/lokeshsun';
 
 const SUGGESTED_QUESTIONS = [
   'What does this codebase do?',
@@ -23,6 +23,19 @@ const TECH_STACK = [
   { name: 'React', icon: SiReact },
   { name: 'Tailwind CSS', icon: SiTailwindcss },
   { name: 'Docker', icon: SiDocker },
+];
+
+const SUGGESTED_REPOS = [
+  {
+    name: 'SureSeat',
+    url: 'https://github.com/silver-bullet007/SureSeat',
+    description: 'A concurrent ticket-booking system built to prevent race-condition booking errors.',
+  },
+  {
+    name: 'SporadicNews',
+    url: 'https://github.com/silver-bullet007/SporadicNews',
+    description: 'An automated news aggregation bot that scrapes, filters with Gemini, and posts to Twitter.',
+  },
 ];
 
 function App() {
@@ -66,7 +79,7 @@ function App() {
   async function ingestRepo() {
     if (!repoUrl.trim()) return;
     setIngesting(true);
-    setIngestStatus('Cloning and ingesting — this can take a minute...');
+    setIngestStatus('Cloning and ingesting — larger repos may take a few minutes due to API rate limits...');
     try {
       const params = new URLSearchParams({ repoUrl });
       const response = await fetch(`${API_BASE}/ingest?${params}`, { method: 'POST' });
@@ -116,6 +129,7 @@ function App() {
           </a>
         </div>
 
+        {/* Tabs */}
         <div className="flex gap-2 mb-4 border-b border-slate-700">
           {['chat', 'ingest', 'review'].map(t => (
             <button
@@ -176,7 +190,21 @@ function App() {
                     {ingesting ? 'Ingesting...' : 'Load'}
                   </button>
                 </div>
-                {ingestStatus && <div className="border border-slate-700 rounded p-3 bg-slate-800 text-sm">{ingestStatus}</div>}
+                {ingestStatus && <div className="border border-slate-700 rounded p-3 bg-slate-800 text-sm mb-4">{ingestStatus}</div>}
+
+                <p className="text-xs uppercase tracking-wide text-slate-500 mb-2 mt-4">Or try one of these</p>
+                <div className="flex flex-col gap-2 max-w-md">
+                  {SUGGESTED_REPOS.map((r) => (
+                    <button
+                      key={r.url}
+                      onClick={() => setRepoUrl(r.url)}
+                      className="text-left border border-slate-700 rounded px-3 py-2 bg-slate-800 hover:bg-slate-700 hover:border-blue-400 transition-colors"
+                    >
+                      <div className="text-sm font-medium">{r.name}</div>
+                      <div className="text-xs text-slate-400">{r.description}</div>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
