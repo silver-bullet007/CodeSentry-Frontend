@@ -5,7 +5,7 @@ import {
   SiReact, SiOpenjdk, SiGooglegemini,
 } from 'react-icons/si';
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = import.meta.env.DEV ? 'http://localhost:8080/api' : '/api';
 const LINKEDIN_URL = 'https://www.linkedin.com/in/lokeshsun';
 
 const SUGGESTED_QUESTIONS = [
