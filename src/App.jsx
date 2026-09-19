@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaLinkedin } from 'react-icons/fa';
+import { FaLinkedin, FaTimes } from 'react-icons/fa';
 import {
   SiSpringboot, SiPostgresql, SiDocker, SiTailwindcss,
   SiReact, SiOpenjdk, SiGooglegemini,
@@ -36,6 +36,16 @@ const SUGGESTED_REPOS = [
     url: 'https://github.com/silver-bullet007/SporadicNews',
     description: 'An automated news aggregation bot that scrapes, filters with Gemini, and posts to Twitter.',
   },
+  {
+    name: 'kilo',
+    url: 'https://github.com/antirez/kilo',
+    description: 'A ~1000-line terminal text editor in C, written by Redis creator antirez.',
+  },
+  {
+    name: 'micrograd',
+    url: 'https://github.com/karpathy/micrograd',
+    description: "Andrej Karpathy's tiny autograd engine — backpropagation explained in ~150 lines.",
+  },
 ];
 
 function App() {
@@ -45,6 +55,7 @@ function App() {
   const [input, setInput] = useState('');
   const [conversationId] = useState(() => crypto.randomUUID());
   const [loading, setLoading] = useState(false);
+  const [showHint, setShowHint] = useState(true);
 
   const [repoUrl, setRepoUrl] = useState('');
   const [ingestStatus, setIngestStatus] = useState('');
@@ -148,6 +159,20 @@ function App() {
           <div>
             {tab === 'chat' && (
               <div>
+                {showHint && (
+                  <div className="flex items-start justify-between gap-2 border border-amber-700/50 bg-amber-950/30 text-amber-200 text-sm rounded p-3 mb-3">
+                    <span>
+                      😀 Before chatting, please load a codebase in the <span className="font-semibold">Ingest</span> tab.
+                    </span>
+                    <button
+                      onClick={() => setShowHint(false)}
+                      className="text-amber-300 hover:text-amber-100 shrink-0"
+                      aria-label="Dismiss"
+                    >
+                      <FaTimes size={14} />
+                    </button>
+                  </div>
+                )}
                 <div className="border border-slate-700 rounded p-4 h-96 overflow-y-auto mb-3 space-y-2 bg-slate-800">
                   {messages.length === 0 && (
                     <p className="text-slate-400 text-sm">Try one of the suggested questions to the right, or ask your own below.</p>
@@ -178,7 +203,9 @@ function App() {
 
             {tab === 'ingest' && (
               <div>
-                <p className="text-sm text-slate-400 mb-2">Load a public GitHub repository to chat about. This replaces whatever is currently loaded.</p>
+                <p className="text-sm text-slate-400 mb-2">
+                  Load a <span className="font-semibold text-slate-300">public</span> GitHub repository to chat about. This replaces whatever is currently loaded.
+                </p>
                 <div className="flex gap-2 mb-3">
                   <input
                     className="flex-1 border border-slate-600 rounded px-3 py-2 bg-slate-800 text-slate-100 placeholder-slate-500"
